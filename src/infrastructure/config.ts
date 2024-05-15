@@ -12,7 +12,7 @@ const loadFromEnv = (key: string) => {
 
 const config = {
   port: loadFromEnv('PORT'),
-  dbUri: loadFromEnv('DB_URI'),
+  dbUri: loadFromEnv('DATABASE_URL'),
   jwtSecret: loadFromEnv('JWT_SECRET'),
   jwtExpire: loadFromEnv('JWT_EXPIRE'),
   cookieExpire: loadFromEnv('COOKIE_EXPIRE'),
