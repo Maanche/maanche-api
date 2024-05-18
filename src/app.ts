@@ -2,20 +2,19 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import router from './routes/v1';
-
+import { userRouter } from './routes/v1/user.route';
 const app = express();
-// app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(router)
+app.use('/api/v1', userRouter);
 
-app.get("/",(req,res)=>{
-    res.send("hello world!")
-})
+//ping check
+app.get('/ping', (req, res) => {
+  res.status(200).json({ message: 'pong' });
+});
 
 export { app };
