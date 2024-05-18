@@ -1,29 +1,38 @@
-import { User, Role, Prisma } from '@prisma/client';
+import { User, Prisma, RoleType } from '@prisma/client';
 import httpStatus from 'http-status';
-import prisma from '../client';
 import ApiError from '../utils/ApiError';
-import { encryptPassword } from '../utils/encryption';
+//import { encryptPassword } from '../utils/encryption';
+import { prisma } from '../utils/prisma-client';
 
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createUser = async (
+export const createUser = async (
   email: string,
   password: string,
-  name?: string,
-  role: Role = Role.USER
-): Promise<User> => {
+  fname: string,
+  address:string,
+  isVerified:boolean,
+  lname:string,
+  otp:string,
+  phone_no:number
+
+) /* : Promise<User> */ => {
   if (await getUserByEmail(email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  return prisma.user.create({
+  return await prisma.user.create({
     data: {
       email,
-      name,
-      password: await encryptPassword(password),
-      role
+      password,
+      fname,
+      address,
+      isVerified,
+      lname,
+      otp,
+      phone_no
     }
   });
 };
@@ -129,9 +138,9 @@ const getUserByEmail = async <Key extends keyof User>(
 const updateUserById = async <Key extends keyof User>(
   userId: number,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  keys: Key[] = ['id', 'email', 'fname', 'role'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
-  const user = await getUserById(userId, ['id', 'email', 'name']);
+  const user = await getUserById(userId, ['id', 'email', 'fname']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -161,7 +170,7 @@ const deleteUserById = async (userId: number): Promise<User> => {
 };
 
 export default {
-  createUser,
+
   queryUsers,
   getUserById,
   getUserByEmail,

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,36 +8,54 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
-  name            String?
+  id              String    @id @default(uuid())
+  email           String    @unique
+  fname           String
+  lname           String
   password        String
-  role            Role     @default(USER)
-  isEmailVerified Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  Token           Token[]
+  phone_no        Int       @unique
+  image_url       String?
+  address         String
+  role            Role?      
+  token           Token[]
+  isVerified      Boolean
+  otp             String
+  otp_verified_at DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  @@index([email])
 }
 
 model Token {
-  id          Int       @id @default(autoincrement())
-  token       String
-  type        TokenType
-  expires     DateTime
-  blacklisted Boolean
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-}
-
-enum Role {
-  USER
-  ADMIN
+  id        String    @id @default(uuid())
+  token     String
+  type      TokenType
+  expires   DateTime
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 enum TokenType {
-  ACCESS
   REFRESH
-  RESET_PASSWORD
   VERIFY_EMAIL
+}
+
+model Role {
+  id        String    @id @default(uuid())
+  name      RoleType  @default(USER)
+  slug      String
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String      @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+enum RoleType {
+  USER
+  WORKER
+  ADMIN
 }
