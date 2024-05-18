@@ -1,4 +1,4 @@
-import { User, Prisma, RoleType } from '@prisma/client';
+import { User, Prisma} from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 //import { encryptPassword } from '../utils/encryption';
@@ -99,7 +99,7 @@ const getUserById = async <Key extends keyof User>(
   ] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
-    where: { id },
+    where: {id:"2" },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   }) as Promise<Pick<User, Key> | null>;
 };
@@ -110,15 +110,15 @@ const getUserById = async <Key extends keyof User>(
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
-const getUserByEmail = async <Key extends keyof User>(
+export const getUserByEmail = async <Key extends keyof User>(
   email: string,
   keys: Key[] = [
     'id',
     'email',
-    'name',
+    'fname',
     'password',
     'role',
-    'isEmailVerified',
+    'isVerified',
     'createdAt',
     'updatedAt'
   ] as Key[]
