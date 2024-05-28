@@ -13,13 +13,13 @@ model User {
   fname           String
   lname           String
   password        String
-  phone_no        BigInt     @unique
+  phone_no        BigInt?     @unique
   image_url       String?
-  address         String
+  address         String?
   role            Role?      
   token           Token[]
-  isVerified      Boolean
-  otp             String
+  isVerified      Boolean?
+  otp             String?
   otp_verified_at DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
